@@ -1,0 +1,60 @@
+# Troubleshooting
+
+## "codex binary not found in PATH"
+
+Codex CLI is not installed or not in your PATH.
+
+Solution:
+- Install Codex CLI and ensure it’s on PATH.
+- Verify with:
+  `which codex`
+
+## "Azure CLI not found" or not logged in
+
+`az` is not installed or you’re not authenticated.
+
+Solutions:
+- Install Azure CLI: https://aka.ms/azcli
+- Run: `az login`
+
+## "missing subscription/group/resource" errors
+
+Configuration incomplete.
+
+Solutions:
+- Run interactive setup: `codzure manage config`
+- Or set values: `codzure manage config set <key> <value>`
+
+## "could not list deployments"
+
+Your Azure OpenAI resource has no deployments or you lack permissions.
+
+Solutions:
+- Check resource in Azure Portal
+- Create deployments in Azure Portal
+- Ensure you have Azure OpenAI access and proper RBAC
+
+## "cannot update development build"
+
+You’re running a development build (`version dev`).
+
+Solution:
+- Install from releases or tag and download a release
+
+## Installation Issues
+
+- No internet: verify GitHub access
+- Unsupported platform: check releases for your OS/arch
+- Permission denied: use `sudo` for `/usr/local/bin`
+
+Debug:
+```
+curl -fsSL https://raw.githubusercontent.com/OlaHulleberg/codzure/main/install.sh -o install.sh
+bash -x install.sh
+```
+
+## Profile Issues
+
+- Profile not found: `codzure manage profiles`
+- Cannot delete current profile: switch first, then delete
+- Migration: legacy `current.env` migrated to `profiles/default.json` on first run

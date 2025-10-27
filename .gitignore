@@ -1,0 +1,14 @@
+# Build outputs
+bin/
+dist/
+*.exe
+*.out
+
+# Go
+*.test
+coverage/
+.gocache/
+codzure
+
+# macOS
+.DS_Store
