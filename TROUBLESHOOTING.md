@@ -16,6 +16,7 @@ Solution:
 Solutions:
 - Install Azure CLI: https://aka.ms/azcli
 - Run: `az login`
+ - Or choose Keychain auth in `codzure manage config` to run without Azure CLI
 
 ## "missing subscription/group/resource" errors
 
@@ -58,3 +59,16 @@ bash -x install.sh
 - Profile not found: `codzure manage profiles`
 - Cannot delete current profile: switch first, then delete
 - Migration: legacy `current.env` migrated to `profiles/default.json` on first run
+
+## Keychain Authentication Issues
+
+### "failed to store API key in keychain" / "failed to retrieve API key from keychain"
+
+Codzure uses the OS keychain via `go-keyring`.
+
+Solutions:
+- macOS: Ensure you are logged in and Keychain Access is available.
+- Windows: Ensure Credential Manager is available; run as the same user.
+- Linux: Install and run a Secret Service implementation (e.g., `gnome-keyring` or `libsecret`). Make sure your desktop session unlocks the keyring and `DBUS_SESSION_BUS_ADDRESS` is set.
+- Try re-running `codzure manage config` and re-entering the API key.
+- If your profile was renamed, the key is stored under the profile name; re-store the key after renaming.

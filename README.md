@@ -2,7 +2,7 @@
 
 **Launch Codex with Azure OpenAI in one command.**
 
-A lightweight CLI that configures Codex to use Azure OpenAI automatically, handling authentication and environment setup.
+A lightweight CLI that configures Codex to use Azure OpenAI automatically, handling authentication and environment setup via Azure CLI or OS keychain.
 
 ---
 
@@ -89,6 +89,7 @@ codzure manage config delete old-profile       # Delete profile
 
 # Models
 codzure manage models list                     # List available deployments
+Note: Requires Azure CLI authentication.
 
 # Updates
 codzure manage update                          # Update to latest version
@@ -106,7 +107,9 @@ codzure --codzure-profile production
 ## What It Does
 
 1. Loads your Azure OpenAI configuration from the current profile
-2. Fetches API keys and endpoint from Azure using `az` CLI
+2. Uses your chosen auth mode:
+   - Azure CLI: fetches keys and endpoint via `az` at runtime
+   - Keychain: retrieves API key from OS keychain; uses saved endpoint/deployment
 3. Launches `codex` with the correct environment variables set (`AZURE_OPENAI_*`, `OPENAI_*`)
 4. Passes through any Codex CLI flags you provide
 
@@ -124,11 +127,13 @@ Override profile settings for a single run using command-line flags.
 ### 🔄 Codex CLI Passthrough
 Pass any Codex CLI flags and commands directly through codzure (e.g., `--resume`, `--debug`, `--print`).
 
-### 🔐 Zero-Config Authentication
-Automatically fetches Azure OpenAI keys and endpoints via Azure CLI—no manual key management.
+### 🔐 Authentication Options
+- Azure CLI (recommended): zero manual key management; keys fetched on-demand.
+- OS Keychain (manual): store API key securely in the OS keychain; enter endpoint/deployment.
 
 ### 🔒 Privacy-First
-All configuration stored locally in `~/.codzure/`. Keys are fetched on-demand and never persisted.
+- In Azure CLI mode, keys are fetched on-demand and never persisted.
+- In Keychain mode, keys are stored securely in the OS keychain; never written to disk.
 
 ## Documentation
 
@@ -140,7 +145,9 @@ All configuration stored locally in `~/.codzure/`. Keys are fetched on-demand an
 ## Requirements
 
 - [Codex](https://openai.com/codex/) (Codex CLI) installed
-- [Azure CLI](https://aka.ms/azcli) configured (`az login`)
+- One of:
+  - [Azure CLI](https://aka.ms/azcli) configured (`az login`), or
+  - OS keychain available (macOS Keychain, Windows Credential Manager, Linux Secret Service)
 - Azure OpenAI access with model deployments
 
 ## License
