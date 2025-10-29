@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/OlaHulleberg/codzure/internal/updater"
+	"github.com/OlaHulleberg/codezure/internal/updater"
 	"github.com/spf13/cobra"
 )
 

@@ -1,10 +1,10 @@
 #!/bin/bash
 set -e
 
-# codzure installer script
-# Usage: curl -fsSL https://raw.githubusercontent.com/OlaHulleberg/codzure/main/install.sh | bash
+# codezure installer script
+# Usage: curl -fsSL https://raw.githubusercontent.com/OlaHulleberg/codezure/main/install.sh | bash
 
-REPO="OlaHulleberg/codzure"
+REPO="OlaHulleberg/codezure"
 INSTALL_DIR="/usr/local/bin"
 FALLBACK_DIR="$HOME/.local/bin"
 
@@ -13,7 +13,7 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-echo "Installing codzure..."
+echo "Installing codezure..."
 
 OS="$(uname -s)"
 ARCH="$(uname -m)"
@@ -34,12 +34,12 @@ esac
 echo "Detected: $OS/$ARCH"
 
 if [ "$OS" = "windows" ]; then
-    EXT="zip"; BINARY="codzure.exe"
+    EXT="zip"; BINARY="codezure.exe"
 else
-    EXT="tar.gz"; BINARY="codzure"
+    EXT="tar.gz"; BINARY="codezure"
 fi
 
-ARCHIVE="codzure_${OS}_${ARCH}.${EXT}"
+ARCHIVE="codezure_${OS}_${ARCH}.${EXT}"
 echo "Fetching latest release..."
 REL_URL="https://api.github.com/repos/$REPO/releases/latest"
 DL_URL=$(curl -s "$REL_URL" | grep "browser_download_url.*$ARCHIVE" | cut -d '"' -f 4)
@@ -77,12 +77,74 @@ if [ "$INSTALLED" = false ]; then
 fi
 
 cd - > /dev/null
-if command -v codzure >/dev/null 2>&1; then
-    VERSION=$(codzure manage version 2>&1 || echo "unknown")
-    echo ""; echo -e "${GREEN}✓ codzure installed successfully!${NC}"; echo "  Version: $VERSION"; echo ""
+if command -v codezure >/dev/null 2>&1; then
+    VERSION=$(codezure manage version 2>&1 || echo "unknown")
+    echo ""; echo -e "${GREEN}✓ codezure installed successfully!${NC}"; echo "  Version: $VERSION"; echo ""
     echo "Get started:"
-    echo "  codzure manage config"
-    echo "  codzure"
+    echo "  codezure manage config"
+    echo "  codezure"
 else
-    echo ""; echo -e "${YELLOW}Note: You may need to restart your shell or update PATH${NC}"; echo "Then verify with: codzure manage version"
+    echo ""; echo -e "${YELLOW}Note: You may need to restart your shell or update PATH${NC}"; echo "Then verify with: codezure manage version"
+fi
+# Detect legacy codzure and offer uninstall + config migration
+if command -v codzure >/dev/null 2>&1; then
+    LEGACY_PATH=$(command -v codzure)
+    echo "Found legacy installation: $LEGACY_PATH"
+    # Prompt (stdout) and read from tty if available; default to Y otherwise
+    RESP="Y"
+    if [ -t 0 ] || [ -t 1 ] || [ -t 2 ]; then
+        printf "Uninstall legacy codzure and migrate configs to codezure? [Y/n] "
+        set +e
+        if [ -r /dev/tty ]; then
+            read -r RESP < /dev/tty || RESP="Y"
+        else
+            read -r RESP || RESP="Y"
+        fi
+        set -e
+        [ -z "$RESP" ] && RESP="Y"
+    else
+        echo "Non-interactive shell detected; defaulting to 'Y' for uninstall + migration."
+        RESP="Y"
+    fi
+    if [ "$RESP" = "Y" ] || [ "$RESP" = "y" ]; then
+        echo "Uninstalling codzure..."
+        if [ -w "$LEGACY_PATH" ]; then
+            rm -f "$LEGACY_PATH" || echo -e "${YELLOW}Warning: failed to remove $LEGACY_PATH${NC}"
+        elif command -v sudo >/dev/null 2>&1; then
+            sudo rm -f "$LEGACY_PATH" || echo -e "${YELLOW}Warning: failed to remove $LEGACY_PATH${NC}"
+        else
+            echo -e "${YELLOW}Warning: cannot remove $LEGACY_PATH without sudo; please remove manually${NC}"
+        fi
+        # Migrate ~/.codzure -> ~/.codezure (non-destructive)
+        OLD_DIR="$HOME/.codzure"
+        NEW_DIR="$HOME/.codezure"
+        if [ -d "$OLD_DIR" ]; then
+            echo "Migrating configuration from ~/.codzure to ~/.codezure..."
+            mkdir -p "$NEW_DIR/profiles"
+            # Copy profiles if present (skip existing)
+            if [ -d "$OLD_DIR/profiles" ]; then
+                for f in "$OLD_DIR"/profiles/*.json; do
+                    [ -e "$f" ] || continue
+                    base=$(basename "$f")
+                    dst="$NEW_DIR/profiles/$base"
+                    if [ ! -e "$dst" ]; then
+                        cp "$f" "$dst"
+                    fi
+                done
+            fi
+            # Copy current-profile.txt if not present
+            if [ -f "$OLD_DIR/current-profile.txt" ] && [ ! -f "$NEW_DIR/current-profile.txt" ]; then
+                cp "$OLD_DIR/current-profile.txt" "$NEW_DIR/current-profile.txt"
+            fi
+            # Copy legacy current.env so app can migrate it on first run
+            if [ -f "$OLD_DIR/current.env" ] && [ ! -f "$NEW_DIR/current.env" ]; then
+                cp "$OLD_DIR/current.env" "$NEW_DIR/current.env"
+            fi
+            echo -e "${GREEN}✓ Migration complete${NC}"
+        else
+            echo "No ~/.codzure directory found; skipping config migration."
+        fi
+    else
+        echo "Skipping uninstall/migration of legacy codzure."
+    fi
 fi

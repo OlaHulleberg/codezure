@@ -2,7 +2,7 @@ package azure
 
 import (
 	"fmt"
-	"github.com/OlaHulleberg/codzure/internal/profiles"
+	"github.com/OlaHulleberg/codezure/internal/profiles"
 	"os"
 	"os/exec"
 	"strings"

@@ -5,8 +5,8 @@ import (
 	keyring "github.com/zalando/go-keyring"
 )
 
-// Service name used in OS keychain entries for codzure.
-const serviceName = "codzure"
+// Service name used in OS keychain entries for codezure.
+const serviceName = "codezure"
 
 // SaveKey stores the API key for a given profile in the OS keychain.
 func SaveKey(profile string, apiKey string) error {

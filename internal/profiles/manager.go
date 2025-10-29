@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/OlaHulleberg/codzure/internal/config"
+	"github.com/OlaHulleberg/codezure/internal/config"
 	"os"
 	"path/filepath"
 	"strings"
@@ -20,7 +20,8 @@ func NewManager() (*Manager, error) {
 	if err != nil {
 		return nil, err
 	}
-	dir := filepath.Join(home, ".codzure")
+	// New location
+	dir := filepath.Join(home, ".codezure")
 	prof := filepath.Join(dir, "profiles")
 	if err := os.MkdirAll(prof, 0o755); err != nil {
 		return nil, err
@@ -72,7 +73,7 @@ func (m *Manager) GetCurrentConfig(version string) (*config.Config, error) {
 	// If no current profile, return an error so caller can trigger interactive GUI
 	name, err := m.GetCurrent()
 	if err != nil || name == "" {
-		return nil, fmt.Errorf("no current profile configured; run 'codzure manage config'")
+		return nil, fmt.Errorf("no current profile configured; run 'codezure manage config'")
 	}
 	return readJSONFile(m.profileFile(name))
 }
@@ -160,11 +161,11 @@ func (m *Manager) Validate(cfg *config.Config) error {
 	switch auth {
 	case "azure-cli":
 		if strings.TrimSpace(cfg.Subscription) == "" || strings.TrimSpace(cfg.Group) == "" || strings.TrimSpace(cfg.Resource) == "" {
-			return errors.New("subscription/group/resource must be set; run 'codzure manage config'")
+			return errors.New("subscription/group/resource must be set; run 'codezure manage config'")
 		}
 	case "api-key":
 		if strings.TrimSpace(cfg.Endpoint) == "" || strings.TrimSpace(cfg.Deployment) == "" {
-			return errors.New("endpoint/deployment must be set; run 'codzure manage config' and choose Keychain auth")
+			return errors.New("endpoint/deployment must be set; run 'codezure manage config' and choose Keychain auth")
 		}
 	default:
 		return fmt.Errorf("unknown auth mode: %s", auth)

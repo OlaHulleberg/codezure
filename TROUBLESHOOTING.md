@@ -16,15 +16,15 @@ Solution:
 Solutions:
 - Install Azure CLI: https://aka.ms/azcli
 - Run: `az login`
- - Or choose Keychain auth in `codzure manage config` to run without Azure CLI
+ - Or choose Keychain auth in `codezure manage config` to run without Azure CLI
 
 ## "missing subscription/group/resource" errors
 
 Configuration incomplete.
 
 Solutions:
-- Run interactive setup: `codzure manage config`
-- Or set values: `codzure manage config set <key> <value>`
+- Run interactive setup: `codezure manage config`
+- Or set values: `codezure manage config set <key> <value>`
 
 ## "could not list deployments"
 
@@ -50,13 +50,13 @@ Solution:
 
 Debug:
 ```
-curl -fsSL https://raw.githubusercontent.com/OlaHulleberg/codzure/main/install.sh -o install.sh
+curl -fsSL https://raw.githubusercontent.com/OlaHulleberg/codezure/main/install.sh -o install.sh
 bash -x install.sh
 ```
 
 ## Profile Issues
 
-- Profile not found: `codzure manage profiles`
+- Profile not found: `codezure manage profiles`
 - Cannot delete current profile: switch first, then delete
 - Migration: legacy `current.env` migrated to `profiles/default.json` on first run
 
@@ -70,5 +70,5 @@ Solutions:
 - macOS: Ensure you are logged in and Keychain Access is available.
 - Windows: Ensure Credential Manager is available; run as the same user.
 - Linux: Install and run a Secret Service implementation (e.g., `gnome-keyring` or `libsecret`). Make sure your desktop session unlocks the keyring and `DBUS_SESSION_BUS_ADDRESS` is set.
-- Try re-running `codzure manage config` and re-entering the API key.
+- Try re-running `codezure manage config` and re-entering the API key.
 - If your profile was renamed, the key is stored under the profile name; re-store the key after renaming.

@@ -1,4 +1,4 @@
-module github.com/OlaHulleberg/codzure
+module github.com/OlaHulleberg/codezure
 
 go 1.23
 

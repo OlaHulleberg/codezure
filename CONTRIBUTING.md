@@ -10,8 +10,8 @@ Thanks for your interest in contributing! This project mirrors conventions from 
 ## Development
 - Commands implemented via Cobra under `cmd/`
 - Internal packages under `internal/`
-- Profiles stored as JSON at `~/.codzure/profiles/<name>.json`
-- Current profile tracked in `~/.codzure/current-profile.txt`
+- Profiles stored as JSON at `~/.codezure/profiles/<name>.json`
+- Current profile tracked in `~/.codezure/current-profile.txt`
 
 ## Release
 - Tag as `vX.Y.Z` to trigger GoReleaser workflow

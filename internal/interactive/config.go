@@ -2,10 +2,10 @@ package interactive
 
 import (
 	"fmt"
-	"github.com/OlaHulleberg/codzure/internal/azure"
-	"github.com/OlaHulleberg/codzure/internal/config"
-	"github.com/OlaHulleberg/codzure/internal/profiles"
-	"github.com/OlaHulleberg/codzure/internal/secrets"
+	"github.com/OlaHulleberg/codezure/internal/azure"
+	"github.com/OlaHulleberg/codezure/internal/config"
+	"github.com/OlaHulleberg/codezure/internal/profiles"
+	"github.com/OlaHulleberg/codezure/internal/secrets"
 )
 
 // RunInteractiveConfig runs an interactive configuration wizard using Bubbletea selector

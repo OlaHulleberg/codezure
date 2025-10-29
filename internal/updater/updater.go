@@ -15,8 +15,8 @@ import (
 )
 
 const (
-	githubAPIURL  = "https://api.github.com/repos/OlaHulleberg/codzure/releases/latest"
-	githubRepoURL = "https://github.com/OlaHulleberg/codzure"
+	githubAPIURL  = "https://api.github.com/repos/OlaHulleberg/codezure/releases/latest"
+	githubRepoURL = "https://github.com/OlaHulleberg/codezure"
 )
 
 type GitHubRelease struct {
@@ -37,7 +37,7 @@ func CheckForUpdates(currentVersion string) {
 	}
 	if latestVersion != currentVersion && latestVersion != "" {
 		fmt.Fprintf(os.Stderr, "\n⚠️  New version available: %s (current: %s)\n", latestVersion, currentVersion)
-		fmt.Fprintf(os.Stderr, "   Run 'codzure update' to upgrade\n\n")
+		fmt.Fprintf(os.Stderr, "   Run 'codezure update' to upgrade\n\n")
 	}
 }
 
@@ -102,7 +102,7 @@ func getLatestRelease() (*GitHubRelease, error) {
 func getBinaryAssetName() string {
 	osname := runtime.GOOS
 	arch := runtime.GOARCH
-	name := fmt.Sprintf("codzure_%s_%s", osname, arch)
+	name := fmt.Sprintf("codezure_%s_%s", osname, arch)
 	if osname == "windows" {
 		name += ".zip"
 	} else {
@@ -120,7 +120,7 @@ func downloadAndReplace(url string) error {
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("download failed with status %d", resp.StatusCode)
 	}
-	tmpFile, err := os.CreateTemp("", "codzure-archive-*")
+	tmpFile, err := os.CreateTemp("", "codezure-archive-*")
 	if err != nil {
 		return err
 	}
@@ -188,8 +188,8 @@ func extractFromTarGz(path string) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		if h.Typeflag == tar.TypeReg && filepath.Base(h.Name) == "codzure" {
-			tmp, err := os.CreateTemp("", "codzure-binary-*")
+		if h.Typeflag == tar.TypeReg && filepath.Base(h.Name) == "codezure" {
+			tmp, err := os.CreateTemp("", "codezure-binary-*")
 			if err != nil {
 				return "", err
 			}
@@ -213,13 +213,13 @@ func extractFromZip(path string) (string, error) {
 	}
 	defer zr.Close()
 	for _, file := range zr.File {
-		if filepath.Base(file.Name) == "codzure.exe" {
+		if filepath.Base(file.Name) == "codezure.exe" {
 			rc, err := file.Open()
 			if err != nil {
 				return "", err
 			}
 			defer rc.Close()
-			tmp, err := os.CreateTemp("", "codzure-binary-*.exe")
+			tmp, err := os.CreateTemp("", "codezure-binary-*.exe")
 			if err != nil {
 				return "", err
 			}

@@ -2,25 +2,25 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/OlaHulleberg/codzure/internal/config"
-	"github.com/OlaHulleberg/codzure/internal/interactive"
-	"github.com/OlaHulleberg/codzure/internal/launcher"
-	"github.com/OlaHulleberg/codzure/internal/profiles"
-	"github.com/OlaHulleberg/codzure/internal/updater"
+	"github.com/OlaHulleberg/codezure/internal/config"
+	"github.com/OlaHulleberg/codezure/internal/interactive"
+	"github.com/OlaHulleberg/codezure/internal/launcher"
+	"github.com/OlaHulleberg/codezure/internal/profiles"
+	"github.com/OlaHulleberg/codezure/internal/updater"
 	"github.com/spf13/cobra"
 	"os"
 	"strings"
 )
 
 var (
-	codzureProfileFlag string
-	Version            = "dev"
+	codezureProfileFlag string
+	Version             = "dev"
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "codzure",
+	Use:   "codezure",
 	Short: "Launch Codex CLI with Azure OpenAI configuration",
-	Long:  `codzure configures Azure OpenAI env and launches Codex CLI, or prints env for manual use.`,
+	Long:  `codezure configures Azure OpenAI env and launches Codex CLI, or prints env for manual use.`,
 	Args:  cobra.ArbitraryArgs, // Accept any args for passthrough to Codex
 	RunE:  runRoot,
 }
@@ -32,7 +32,7 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.Flags().StringVar(&codzureProfileFlag, "codzure-profile", "", "Use a specific codzure profile for this run")
+	rootCmd.Flags().StringVar(&codezureProfileFlag, "codezure-profile", "", "Use a specific codezure profile for this run")
 
 	// Allow unknown flags to pass through to Codex CLI
 	rootCmd.FParseErrWhitelist.UnknownFlags = true
@@ -54,13 +54,14 @@ func runRoot(cmd *cobra.Command, args []string) error {
 	}
 
 	var cfg *config.Config
-	if codzureProfileFlag != "" {
+	profile := codezureProfileFlag
+	if profile != "" {
 		// Load specific profile
-		cfg, err = pm.Load(codzureProfileFlag)
+		cfg, err = pm.Load(profile)
 		if err != nil {
-			return fmt.Errorf("failed to load profile '%s': %w", codzureProfileFlag, err)
+			return fmt.Errorf("failed to load profile '%s': %w", profile, err)
 		}
-		fmt.Printf("Using profile: %s\n\n", codzureProfileFlag)
+		fmt.Printf("Using profile: %s\n\n", profile)
 	} else {
 		// First-run: if no current profile, trigger interactive GUI
 		if _, e := pm.GetCurrent(); e != nil {
@@ -84,15 +85,16 @@ func runRoot(cmd *cobra.Command, args []string) error {
 	return launcher.Launch(passthroughArgs)
 }
 
-// collectPassthroughArgs separates codzure flags from Codex CLI args
+// collectPassthroughArgs separates codezure flags from Codex CLI args
 func collectPassthroughArgs() []string {
 	if len(os.Args) <= 1 {
 		return nil
 	}
 
 	var passthroughArgs []string
-	codzureFlags := map[string]bool{
-		"--codzure-profile": true,
+	// codezure flags and whether they require a value as the next arg
+	codezureFlags := map[string]bool{
+		"--codezure-profile": true,
 	}
 
 	skip := false
@@ -104,17 +106,20 @@ func collectPassthroughArgs() []string {
 			continue
 		}
 
-		// Check if this is a codzure flag
-		if strings.HasPrefix(arg, "--codzure-") {
+		// Check if this is a codezure flag
+		if strings.HasPrefix(arg, "--codezure-") {
 			// Check if it's a flag with value (--flag=value or --flag value)
 			if strings.Contains(arg, "=") {
 				// --flag=value format, skip entirely
 				continue
-			} else if codzureFlags[arg] {
+			}
+			if requires, ok := codezureFlags[arg]; ok && requires {
 				// --flag value format, skip this and next arg
 				skip = true
 				continue
 			}
+			// codezure boolean flag; skip this single arg
+			continue
 		}
 
 		// This is a passthrough arg

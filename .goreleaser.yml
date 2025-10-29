@@ -5,9 +5,9 @@ before:
     - go mod tidy
 
 builds:
-  - id: codzure
+  - id: codezure
     main: ./main.go
-    binary: codzure
+    binary: codezure
     env:
       - CGO_ENABLED=0
     goos:
@@ -19,10 +19,10 @@ builds:
       - arm64
     ldflags:
       - -s -w
-      - -X github.com/OlaHulleberg/codzure/cmd.Version={{.Tag}}
+      - -X github.com/OlaHulleberg/codezure/cmd.Version={{.Tag}}
 
 archives:
-  - id: codzure
+  - id: codezure
     formats:
       - tar.gz
     format_overrides:
@@ -51,6 +51,6 @@ changelog:
 release:
   github:
     owner: OlaHulleberg
-    name: codzure
+    name: codezure
   draft: false
   prerelease: auto

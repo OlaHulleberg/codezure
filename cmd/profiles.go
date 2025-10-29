@@ -3,8 +3,8 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/OlaHulleberg/codzure/internal/config"
-	"github.com/OlaHulleberg/codzure/internal/profiles"
+	"github.com/OlaHulleberg/codezure/internal/config"
+	"github.com/OlaHulleberg/codezure/internal/profiles"
 	"github.com/spf13/cobra"
 	"os"
 	"path/filepath"
@@ -40,7 +40,7 @@ var profilesCmd = &cobra.Command{
 func pmProfilesDir(pm *profiles.Manager) string { return filepath.Join(pmDir(pm), "profiles") }
 func pmDir(pm *profiles.Manager) string {
 	home, _ := os.UserHomeDir()
-	return filepath.Join(home, ".codzure")
+	return filepath.Join(home, ".codezure")
 }
 
 var configSaveCmd = &cobra.Command{

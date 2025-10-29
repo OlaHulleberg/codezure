@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/OlaHulleberg/codzure/internal/azure"
-	"github.com/OlaHulleberg/codzure/internal/profiles"
+	"github.com/OlaHulleberg/codezure/internal/azure"
+	"github.com/OlaHulleberg/codezure/internal/profiles"
 	"github.com/spf13/cobra"
 )
 

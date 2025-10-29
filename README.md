@@ -1,4 +1,4 @@
-# codzure
+# codezure
 
 **Launch Codex with Azure OpenAI in one command.**
 
@@ -9,28 +9,22 @@ A lightweight CLI that configures Codex to use Azure OpenAI automatically, handl
 ## Installation
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/OlaHulleberg/codzure/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/OlaHulleberg/codezure/main/install.sh | bash
 ```
 
 ## Quick Start
 
 ```bash
 # Interactive configuration (recommended)
-codzure manage config
-
-# Or configure manually
-codzure manage config set subscription <SUBSCRIPTION_ID>
-codzure manage config set group <RESOURCE_GROUP>
-codzure manage config set resource <OPENAI_RESOURCE>
-codzure manage config set deployment <MODEL_DEPLOYMENT>
+codezure manage config
 
 # Launch Codex
-codzure
+codezure
 ```
 
 ## Configuration
 
-Settings are stored in profiles at `~/.codzure/profiles/`:
+Settings are stored in profiles at `~/.codezure/profiles/`:
 
 | Key | Description | Example |
 |-----|-------------|---------|
@@ -42,9 +36,9 @@ Settings are stored in profiles at `~/.codzure/profiles/`:
 | `thinking` | Thinking level (optional) | `low`, `medium`, `high` |
 
 ```bash
-codzure manage config                    # Interactive configuration
-codzure manage config set <key> <value>  # Set a value
-codzure manage config list               # View all settings
+codezure manage config                    # Interactive configuration
+codezure manage config set <key> <value>  # Set a value
+codezure manage config list               # View all settings
 ```
 
 ### Multiple Profiles
@@ -52,48 +46,56 @@ codzure manage config list               # View all settings
 Manage multiple named profiles for different use cases:
 
 ```bash
-codzure manage profiles                  # List all profiles
-codzure manage config save work-dev      # Save current config as profile
-codzure manage config switch personal    # Switch to different profile
-codzure --codzure-profile work-prod      # Use specific profile for one run
+codezure manage profiles                  # List all profiles
+codezure manage config save work-dev      # Save current config as profile
+codezure manage config switch personal    # Switch to different profile
+codezure --codezure-profile work-prod     # Use specific profile for one run
 ```
 
 ## Usage
 
 ```bash
 # Launch Codex
-codzure                                        # Use current profile
-codzure --codzure-profile work-dev             # Use specific profile
+codezure                                        # Use current profile
+codezure --codezure-profile work-dev             # Use specific profile
 
 # Pass Codex CLI flags
-codzure --resume                               # Resume last session
-codzure --continue                             # Continue last session
-codzure --debug                                # Debug mode
-codzure --print "analyze this code"            # Non-interactive mode
+codezure --resume                               # Resume last session
+codezure --continue                             # Continue last session
+codezure --debug                                # Debug mode
+codezure --print "analyze this code"            # Non-interactive mode
 
-# Combined (codzure config + Codex CLI passthrough)
-codzure --codzure-profile work --resume --debug
+# Combined (codezure config + Codex CLI passthrough)
+codezure --codezure-profile work --resume --debug
 
 # Configuration
-codzure manage config                          # Interactive wizard
-codzure manage config list                     # View settings
-codzure manage config set deployment <value>   # Update setting
+codezure manage config                          # Interactive wizard
+codezure manage config list                     # View settings
+codezure manage config set deployment <value>   # Update setting
+
+# Codex configuration (overrides, non-destructive)
+# codezure passes -c model_provider="codezure" and provider details:
+#   -c model_providers.codezure.name="Codezure"
+#   -c model_providers.codezure.base_url="<endpoint>/openai/v1"
+#   -c model_providers.codezure.env_key="CODEZURE_API_KEY"
+#   -c model_providers.codezure.wire_api="responses"
+# It also sets -c model="<deployment>" and optionally -c model_reasoning_effort="<low|medium|high>".
 
 # Profiles
-codzure manage profiles                        # List profiles
-codzure manage config save my-profile          # Save as new profile
-codzure manage config switch my-profile        # Switch profile
-codzure manage config copy prod staging        # Copy profile
-codzure manage config rename old new           # Rename profile
-codzure manage config delete old-profile       # Delete profile
+codezure manage profiles                        # List profiles
+codezure manage config save my-profile          # Save as new profile
+codezure manage config switch my-profile        # Switch profile
+codezure manage config copy prod staging        # Copy profile
+codezure manage config rename old new           # Rename profile
+codezure manage config delete old-profile       # Delete profile
 
 # Models
-codzure manage models list                     # List available deployments
+codezure manage models list                     # List available deployments
 Note: Requires Azure CLI authentication.
 
 # Updates
-codzure manage update                          # Update to latest version
-codzure manage version                         # Show version
+codezure manage update                          # Update to latest version
+codezure manage version                         # Show version
 ```
 
 ### Override Flags
@@ -101,7 +103,7 @@ codzure manage version                         # Show version
 Override profile settings for a single run without changing your saved profile:
 
 ```bash
-codzure --codzure-profile production
+codezure --codezure-profile production
 ```
 
 ## What It Does
@@ -110,7 +112,7 @@ codzure --codzure-profile production
 2. Uses your chosen auth mode:
    - Azure CLI: fetches keys and endpoint via `az` at runtime
    - Keychain: retrieves API key from OS keychain; uses saved endpoint/deployment
-3. Launches `codex` with the correct environment variables set (`AZURE_OPENAI_*`, `OPENAI_*`)
+3. Launches `codex` with the correct configuration overrides and `CODEZURE_API_KEY` in the child environment
 4. Passes through any Codex CLI flags you provide
 
 ## Features
@@ -125,7 +127,7 @@ List all available model deployments in your Azure OpenAI resource with interact
 Override profile settings for a single run using command-line flags.
 
 ### 🔄 Codex CLI Passthrough
-Pass any Codex CLI flags and commands directly through codzure (e.g., `--resume`, `--debug`, `--print`).
+Pass any Codex CLI flags and commands directly through codezure (e.g., `--resume`, `--debug`, `--print`).
 
 ### 🔐 Authentication Options
 - Azure CLI (recommended): zero manual key management; keys fetched on-demand.

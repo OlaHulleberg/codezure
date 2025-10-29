@@ -8,7 +8,7 @@ dist/
 *.test
 coverage/
 .gocache/
-codzure
+codezure
 
 # macOS
 .DS_Store

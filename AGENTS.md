@@ -7,16 +7,16 @@
   - `azure/` (Azure CLI discovery, endpoints)
   - `interactive/` (Bubbletea selector + config wizard)
   - `launcher/` (env setup, launches `codex`)
-  - `profiles/` (profile storage in `~/.codzure/`)
+  - `profiles/` (profile storage in `~/.codezure/`)
   - `updater/` (self‑update via GitHub Releases)
 - `Makefile` – local build and clean; output in `bin/`.
 - `.goreleaser.yml` – release config; tag `vX.Y.Z` to publish.
 
 ## Build, Test, and Development Commands
-- `make build` – builds to `bin/codzure` using local `.gocache`.
+- `make build` – builds to `bin/codezure` using local `.gocache`.
 - `make clean` – removes `bin/` and `.gocache`.
-- `go build -o bin/codzure .` – direct build alternative.
-- Run locally: `./bin/codzure manage config` then `./bin/codzure`.
+- `go build -o bin/codezure .` – direct build alternative.
+- Run locally: `./bin/codezure manage config` then `./bin/codezure`.
 
 ## Coding Style & Naming Conventions
 - Go 1.23+. Run `go fmt ./...` and `go vet ./...` before PRs.
@@ -34,7 +34,7 @@
 - PRs: include description, linked issues, CLI output/screenshot for UX changes, and docs updates when applicable.
 
 ## Security & Configuration Tips
-- Never commit `~/.codzure` contents or secrets.
+- Never commit `~/.codezure` contents or secrets.
 - Ensure `az` is installed and authenticated (`az login`); keys/endpoint are resolved at launch.
 
 ## Agent‑Specific Instructions
